@@ -166,7 +166,11 @@ void CGateConnection::recvLogic()
 			if (length > count) {
 				throw -2;
 			}
-			readSomeBytesFromSocket(m_socket, buffer, length);
+			bool ret = readSomeBytesFromSocket(m_socket, buffer, length);
+			if (!ret)
+			{
+				throw - 3;
+			}
 			recvbuffer.writeSkip(length);
 			// parse for protobuf
 			IGateEvent *evt = onRecvData(buffer, length);
@@ -189,7 +193,9 @@ void CGateConnection::recvLogic()
 		char szbuf[128];
 		sprintf(szbuf,"receiving thread error catched error code %d",errorcode);
 		log(szbuf);
+		
 	}
+	m_socketactive = false;
 	log("recving thread exited");
 }
 void CGateConnection::sendData(const char *buf, int length) {

@@ -52,8 +52,31 @@ std::string dumpHex(const char *data,int count){
 std::string dumpHexAscii(const char *data, int count, int col)
 {
 	std::string text;
+	char buf[64];
+
+	for (int index = 0; index < count; index += col)
+	{
+		int remain = (count - index);
+		remain = remain > col ? col : remain;
+		for (int i = 0; i < remain; ++i)
+		{
+			sprintf(buf, "%02x ", (unsigned char)data[i + index]);
+			text += buf;
+		}
+		for (int i = remain; i < col; ++i) {
+
+			text += "   ";
+		}
+		for (int i = 0; i < remain; ++i)
+		{
+			sprintf(buf, "%c", getPrintChar(data[i + index]));
+			text += buf;
+		}
+		text += "\n";
+	}
 	return text;
 }
+
 
 std::string getRandomAddrByHostName(const std::string &hostname) {
 	std::vector<std::string> ips = getAddrsByHostName(hostname);
