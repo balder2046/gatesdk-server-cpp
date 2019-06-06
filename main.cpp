@@ -85,6 +85,8 @@ int testNetwork()
 		}
 
 	}
+	conn->Close();
+	getchar();
 	WSACleanup();
 	return 0;
 }
